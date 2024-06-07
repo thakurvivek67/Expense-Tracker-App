@@ -1,9 +1,12 @@
 import React from "react";
+import Signin from "./components/Auth/Signin";
+import Login from "./components/Auth/Login";
 
 function App() {
   return (
-    <div className="App">
-      
+    <div>
+      <Signin/>
+      <Login/>
     </div>
   );
 }
