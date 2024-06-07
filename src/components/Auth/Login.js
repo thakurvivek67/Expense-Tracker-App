@@ -1,14 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
+import "./Login.css";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "./Firebase";
+
+const auth = getAuth(app);
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const signinUser = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log("Login success");
+        alert("ok")
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent default form submission
+    signinUser();
+  };
+
   return (
-    <form>
-      <label htmlFor="email">Email</label>
-      <input type="email" id="email" />
-      <label htmlFor="password">Password</label>
-      <input type="password" id="password" />
-      <button>submit</button>
-    </form>
+    <div>
+      <h1>Login here</h1>
+      <div className="form-container">
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
   );
 };
 
