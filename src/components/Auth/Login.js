@@ -1,19 +1,22 @@
 import React, { useState } from "react";
-import "./Login.css";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "./Firebase";
+import { useNavigate } from "react-router-dom";
+
 
 const auth = getAuth(app);
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // Import useNavigate hook
 
   const signinUser = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log("Login success");
-        alert("ok")
+        alert("Login successful");
+        navigate("/home"); // Redirect to home page on successful login
       })
       .catch((error) => {
         console.error(error.message);
@@ -52,3 +55,4 @@ const Login = () => {
 };
 
 export default Login;
+
