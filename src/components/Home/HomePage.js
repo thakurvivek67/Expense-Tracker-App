@@ -1,5 +1,6 @@
 import React from "react";
 import "./HomePage.css";
+import { NavLink } from "react-router-dom";
 
 const HomePage = () => {
   return (
@@ -7,7 +8,7 @@ const HomePage = () => {
       <div className="header">
         <div>welcome to Expense Tracker!!!</div>
         <div className="profile">
-          your profile is incomplete.<button>Complete now</button>
+          your profile is incomplete.<NavLink to="/Profile" activeClassName="active" style={{ color: "blue" }}>Complete now</NavLink>
         </div>
       </div>
     </div>
