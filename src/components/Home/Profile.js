@@ -1,41 +1,74 @@
-import React, { useState } from "react";
-import { getDatabase, ref, set } from "firebase/database"; 
+import { ref, uploadBytes } from "firebase/storage";
+import { useState, useEffect } from "react";
+import { v4 } from "uuid";
+import { push, ref as rtdbRef, onValue } from "firebase/database";
+import { imgDB, rtdb } from "../Auth/Firebase";
 
 const Profile = () => {
-  const [name, setName] = useState("");
-  const [url, setUrl] = useState("");
+  const [txt, setTxt] = useState("");
+  const [img, setImg] = useState("");
+  const [data, setData] = useState([]);
 
-  const handleUpdate = () => {
-    const db = getDatabase(); // Get a reference to the database service
-    const profileRef = ref(db, "profiles/" + name); // Reference to the 'profiles' node with the user's name as key
-    set(profileRef, { name, url }) // Set the data under this reference
-      .then(() => {
-        console.log("Data saved successfully!");
-        setName("");
-        setUrl("");
+  const handleUpload = (e) => {
+    console.log(e.target.files[0]);
+    const imgs = ref(imgDB, `imgs/${v4()}`);
+    uploadBytes(imgs, e.target.files[0])
+      .then((snapshot) => {
+        console.log(snapshot, "imgs");
+        setImg(snapshot.ref.fullPath); // Storing the full path of the image
       })
       .catch((error) => {
-        console.error("Error saving data: ", error);
+        console.error("Error uploading image: ", error);
       });
   };
+
+  const handleClick = () => {
+    const dbRef = rtdb.ref(rtdb, "txtDB"); // Reference to the location in the database
+    dbRef.push({ txtVal: txt, imgUrl: img }) // Push and set data directly
+      .then(() => {
+        alert("Data Added");
+      })
+      .catch((error) => {
+        console.error("Error adding data: ", error);
+      });
+  };
+  
+  
+
+  const getData = () => {
+    const dbRef = rtdbRef(rtdb, "txtDB");
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const dataArray = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        setData(dataArray);
+      } else {
+        setData([]);
+      }
+    });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <div>
       <label htmlFor="username">Name</label>
-      <input
-        type="text"
-        id="username"
-        onChange={(e) => setName(e.target.value)}
-        value={name}
-      />
-      <label htmlFor="img">Profile photo url</label>
-      <input
-        type="url"
-        id="img"
-        onChange={(e) => setUrl(e.target.value)}
-        value={url}
-      />
-      <button onClick={handleUpdate}>Update</button>
+      <input type="text" id="username" onChange={(e) => setTxt(e.target.value)} />
+      <label htmlFor="img">Profile photo</label>
+      <input type="file" id="img" onChange={(e) => handleUpload(e)} />
+      <button onClick={handleClick}>Add</button>
+
+      {data.map((value) => (
+        <div key={value.id}>
+          <h1>{value.txtVal}</h1>
+          <img src={value.imgUrl} height="200px" width="200px" alt="Profile" />
+        </div>
+      ))}
     </div>
   );
 };
