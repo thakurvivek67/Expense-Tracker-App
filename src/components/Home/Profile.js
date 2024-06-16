@@ -1,7 +1,7 @@
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, getDatabase, onValue, push } from "firebase/database";
 import { useState, useEffect } from "react";
 import { v4 } from "uuid";
-import { push, ref as rtdbRef, onValue } from "firebase/database";
+import { uploadBytes, ref as storageRef } from "firebase/storage";
 import { imgDB, rtdb } from "../Auth/Firebase";
 
 const Profile = () => {
@@ -10,12 +10,10 @@ const Profile = () => {
   const [data, setData] = useState([]);
 
   const handleUpload = (e) => {
-    console.log(e.target.files[0]);
-    const imgs = ref(imgDB, `imgs/${v4()}`);
+    const imgs = storageRef(imgDB, `imgs/${v4()}`);
     uploadBytes(imgs, e.target.files[0])
       .then((snapshot) => {
-        console.log(snapshot, "imgs");
-        setImg(snapshot.ref.fullPath); // Storing the full path of the image
+        setImg(snapshot.ref.fullPath);
       })
       .catch((error) => {
         console.error("Error uploading image: ", error);
@@ -23,8 +21,8 @@ const Profile = () => {
   };
 
   const handleClick = () => {
-    const dbRef = rtdb.ref(rtdb, "txtDB"); // Reference to the location in the database
-    dbRef.push({ txtVal: txt, imgUrl: img }) // Push and set data directly
+    const dbRef = ref(rtdb, "txtDB");
+    push(dbRef, { txtVal: txt, imgUrl: img })
       .then(() => {
         alert("Data Added");
       })
@@ -32,11 +30,9 @@ const Profile = () => {
         console.error("Error adding data: ", error);
       });
   };
-  
-  
 
   const getData = () => {
-    const dbRef = rtdbRef(rtdb, "txtDB");
+    const dbRef = ref(rtdb, "txtDB");
     onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {

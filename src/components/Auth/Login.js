@@ -14,9 +14,9 @@ const Login = () => {
   const signinUser = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        console.log("Login success");
+        
         alert("Login successful");
-        navigate("/home"); // Redirect to home page on successful login
+        navigate("/verify"); // Redirect to home page on successful login
       })
       .catch((error) => {
         console.error(error.message);
