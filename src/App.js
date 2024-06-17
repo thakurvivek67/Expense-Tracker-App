@@ -4,7 +4,8 @@ import Login from "./components/Auth/Login";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./components/Home/HomePage";
 import Profile from "./components/Home/Profile";
-import Verfiy from "./components/Auth/Verfiy";
+import Verify from "./components/Auth/Verify";
+
 
 
 
@@ -16,7 +17,7 @@ function App() {
         <Route path="/" element={<Signin/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/home" element={<HomePage />} />
-        <Route path="/verify" element={<Verfiy/>} />
+        <Route path="/verify" element={<Verify/>} />
         <Route path="/profile" element={<Profile/>} />
 
 

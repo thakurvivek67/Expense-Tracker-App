@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import axios from "axios"; // Import axios for HTTP requests
 import { app } from "./Firebase";
 import { useNavigate } from "react-router-dom";
-
 
 const auth = getAuth(app);
 
@@ -11,21 +11,37 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate(); // Import useNavigate hook
 
-  const signinUser = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        
-        alert("Login successful");
-        navigate("/verify"); // Redirect to home page on successful login
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+  const signinUser = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      alert("Login successful");
+
+      // Get the ID token for the user
+      const idToken = await userCredential.user.getIdToken();
+
+      // Send email for verification
+      const mailVerify = await axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDp8idFWhl-LP5BGCa7F_troVRArne3Zls",
+        {
+          requestType: "VERIFY_EMAIL",
+          idToken: idToken,
+        }
+      );
+
+      navigate("/verify"); // Redirect to verification page on successful login
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
-    signinUser();
+    await signinUser(); // Await signinUser function
   };
 
   return (
@@ -39,6 +55,7 @@ const Login = () => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required // Adding required attribute for form validation
           />
           <label htmlFor="password">Password</label>
           <input
@@ -46,6 +63,7 @@ const Login = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required // Adding required attribute for form validation
           />
           <button type="submit">Submit</button>
         </form>
@@ -55,4 +73,3 @@ const Login = () => {
 };
 
 export default Login;
-

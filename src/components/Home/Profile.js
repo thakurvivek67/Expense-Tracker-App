@@ -1,4 +1,4 @@
-import { ref, getDatabase, onValue, push } from "firebase/database";
+import { ref, onValue, push } from "firebase/database";
 import { useState, useEffect } from "react";
 import { v4 } from "uuid";
 import { uploadBytes, ref as storageRef } from "firebase/storage";
