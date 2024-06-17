@@ -1,70 +1,89 @@
-import { ref, onValue, push } from "firebase/database";
-import { useState, useEffect } from "react";
-import { v4 } from "uuid";
-import { uploadBytes, ref as storageRef } from "firebase/storage";
-import { imgDB, rtdb } from "../Auth/Firebase";
+import React, { useState, useRef, useEffect } from 'react';
+import { updateProfile } from 'firebase/auth';
+import { ref, push, onValue } from 'firebase/database';
+import { rtdb } from '../Auth/Firebase'; // Adjust import as per your Firebase setup
+import { getAuth} from "firebase/auth";
+import { app } from '../Auth/Firebase';
+
+
+const auth = getAuth(app);
 
 const Profile = () => {
-  const [txt, setTxt] = useState("");
-  const [img, setImg] = useState("");
-  const [data, setData] = useState([]);
+  const nameRef = useRef(null);
+  const profileUrlRef = useRef(null);
+  const [displayName, setDisplayName] = useState('');
+  const [photoURL, setPhotoURL] = useState('');
 
-  const handleUpload = (e) => {
-    const imgs = storageRef(imgDB, `imgs/${v4()}`);
-    uploadBytes(imgs, e.target.files[0])
-      .then((snapshot) => {
-        setImg(snapshot.ref.fullPath);
-      })
-      .catch((error) => {
-        console.error("Error uploading image: ", error);
-      });
-  };
+  useEffect(() => {
+    // Fetch initial profile data when component mounts
+    if (auth.currentUser) {
+      fetchProfileData(auth.currentUser.uid);
+    }
+  }, []);
 
-  const handleClick = () => {
-    const dbRef = ref(rtdb, "txtDB");
-    push(dbRef, { txtVal: txt, imgUrl: img })
-      .then(() => {
-        alert("Data Added");
-      })
-      .catch((error) => {
-        console.error("Error adding data: ", error);
-      });
-  };
-
-  const getData = () => {
-    const dbRef = ref(rtdb, "txtDB");
+  const fetchProfileData = (uid) => {
+    const dbRef = ref(rtdb, `users/${uid}/profile`);
     onValue(dbRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const dataArray = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-        }));
-        setData(dataArray);
-      } else {
-        setData([]);
+      const profileData = snapshot.val();
+      if (profileData) {
+        setDisplayName(profileData.displayName);
+        setPhotoURL(profileData.photoURL);
       }
     });
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // Function to handle profile update
+  const handleUpdateProfile = async () => {
+    const newName = nameRef.current.value;
+    const newProfileUrl = profileUrlRef.current.value;
+
+    try {
+      // Update profile in Firebase Authentication
+      await updateProfile(auth.currentUser, {
+        displayName: newName,
+        photoURL: newProfileUrl,
+      });
+
+      // Update profile in Realtime Database
+      const dbRef = ref(rtdb, `users/${auth.currentUser.uid}/profile`);
+      await push(dbRef, { displayName: newName, photoURL: newProfileUrl });
+
+      // Update local state with new values
+      setDisplayName(newName);
+      setPhotoURL(newProfileUrl);
+
+      alert('Profile updated successfully');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile. Please try again.');
+    }
+  };
 
   return (
     <div>
-      <label htmlFor="username">Name</label>
-      <input type="text" id="username" onChange={(e) => setTxt(e.target.value)} />
-      <label htmlFor="img">Profile photo</label>
-      <input type="file" id="img" onChange={(e) => handleUpload(e)} />
-      <button onClick={handleClick}>Add</button>
+      
+      <div className='py-8 flex justify-between items-center w-6/12 mx-auto'>
+        <h1 className='font-semibold text-xl'>Contact details</h1>
+        <button className='bg-indigo-300 hover:bg-indigo-400 p-2 text-sm rounded-md'>Cancel</button>
+      </div>
+      <div className='flex items-center w-6/12 mx-auto justify-center'>
+        <h2 className='font-semibold'>Name:</h2>
+        <input ref={nameRef} defaultValue={displayName} className='p-1 border mx-4' />
+        <h2 className='font-semibold'>Photo URL:</h2>
+        <input ref={profileUrlRef} defaultValue={photoURL} className='p-1 border px-2 mx-4' />
+      </div>
+      <div className='flex items-center w-6/12 mx-auto my-16'>
+        <button className='bg-indigo-300 hover:bg-indigo-400 p-2 text-sm rounded-md'
+          onClick={handleUpdateProfile}
+        >
+          Update
+        </button>
+      </div>
 
-      {data.map((value) => (
-        <div key={value.id}>
-          <h1>{value.txtVal}</h1>
-          <img src={value.imgUrl} height="200px" width="200px" alt="Profile" />
-        </div>
-      ))}
+      <div>
+        <h2 className='name'>{displayName}</h2>
+        <img src={photoURL} alt='Profile' className='img' style={{ width: 200, height: 200 }} />
+      </div>
     </div>
   );
 };
