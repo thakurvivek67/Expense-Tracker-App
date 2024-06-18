@@ -1,16 +1,35 @@
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #f0f0f0; /* Set your desired background color */
-  }
-  
-  .header > div {
-    /* Adjust styles as needed */
-  }
-  
-  .profile button {
-    /* Adjust styles as needed */
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f0f0f0; /* Set your desired background color */
+}
+
+.header > div {
+  /* Adjust styles for the inner divs if needed */
+}
+
+.profile {
+  /* Styling for the profile section */
+}
+
+.profile a {
+  text-decoration: none; /* Remove underline */
+  color: #333; /* Default color */
+  margin-right: 10px; /* Adjust spacing between nav links */
+  font-weight: bold; /* Make the text bold */
+  padding: 8px 12px; /* Add padding for better clickability */
+  border-radius: 5px; /* Add rounded corners */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.profile a:hover {
+  background-color: #ddd; /* Background color on hover */
+  color: #000; /* Text color on hover */
+}
+
+.profile a.active {
+  background-color: #007bff; /* Active link background color */
+  color: #fff; /* Active link text color */
+}

@@ -1,88 +1,79 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { updateProfile } from 'firebase/auth';
-import { ref, push, onValue } from 'firebase/database';
-import { rtdb } from '../Auth/Firebase'; // Adjust import as per your Firebase setup
-import { getAuth} from "firebase/auth";
-import { app } from '../Auth/Firebase';
-
-
-const auth = getAuth(app);
+import React, { useState, useEffect } from "react";
+import { getAuth, updateProfile } from "firebase/auth";
+import HomePage from "./HomePage";
 
 const Profile = () => {
-  const nameRef = useRef(null);
-  const profileUrlRef = useRef(null);
-  const [displayName, setDisplayName] = useState('');
-  const [photoURL, setPhotoURL] = useState('');
+  const auth = getAuth();
+  const user = auth.currentUser;
 
+  // Initialize state with localStorage values or empty strings if not found
+  const [name, setName] = useState(localStorage.getItem("name") || "");
+  const [photoUrl, setPhotoUrl] = useState(localStorage.getItem("photoUrl") || "");
+
+  // Update localStorage whenever name or photoUrl changes
   useEffect(() => {
-    // Fetch initial profile data when component mounts
-    if (auth.currentUser) {
-      fetchProfileData(auth.currentUser.uid);
-    }
-  }, []);
+    localStorage.setItem("name", name);
+    localStorage.setItem("photoUrl", photoUrl);
+  }, [name, photoUrl]);
 
-  const fetchProfileData = (uid) => {
-    const dbRef = ref(rtdb, `users/${uid}/profile`);
-    onValue(dbRef, (snapshot) => {
-      const profileData = snapshot.val();
-      if (profileData) {
-        setDisplayName(profileData.displayName);
-        setPhotoURL(profileData.photoURL);
-      }
-    });
-  };
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent default form submission
 
-  // Function to handle profile update
-  const handleUpdateProfile = async () => {
-    const newName = nameRef.current.value;
-    const newProfileUrl = profileUrlRef.current.value;
+    if (user) {
+      updateProfile(user, {
+        displayName: name,
+        photoURL: photoUrl,
+      })
+        .then(() => {
+          // Profile updated successfully
+          console.log("Profile updated successfully");
 
-    try {
-      // Update profile in Firebase Authentication
-      await updateProfile(auth.currentUser, {
-        displayName: newName,
-        photoURL: newProfileUrl,
-      });
-
-      // Update profile in Realtime Database
-      const dbRef = ref(rtdb, `users/${auth.currentUser.uid}/profile`);
-      await push(dbRef, { displayName: newName, photoURL: newProfileUrl });
-
-      // Update local state with new values
-      setDisplayName(newName);
-      setPhotoURL(newProfileUrl);
-
-      alert('Profile updated successfully');
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      alert('Failed to update profile. Please try again.');
+          // Clear input fields
+          setName("");
+          setPhotoUrl("");
+        })
+        .catch((error) => {
+          // An error occurred
+          console.error("Error updating profile: ", error);
+        });
     }
   };
 
   return (
     <div>
-      
-      <div className='py-8 flex justify-between items-center w-6/12 mx-auto'>
-        <h1 className='font-semibold text-xl'>Contact details</h1>
-        <button className='bg-indigo-300 hover:bg-indigo-400 p-2 text-sm rounded-md'>Cancel</button>
-      </div>
-      <div className='flex items-center w-6/12 mx-auto justify-center'>
-        <h2 className='font-semibold'>Name:</h2>
-        <input ref={nameRef} defaultValue={displayName} className='p-1 border mx-4' />
-        <h2 className='font-semibold'>Photo URL:</h2>
-        <input ref={profileUrlRef} defaultValue={photoURL} className='p-1 border px-2 mx-4' />
-      </div>
-      <div className='flex items-center w-6/12 mx-auto my-16'>
-        <button className='bg-indigo-300 hover:bg-indigo-400 p-2 text-sm rounded-md'
-          onClick={handleUpdateProfile}
-        >
-          Update
-        </button>
-      </div>
-
+      <HomePage></HomePage>
       <div>
-        <h2 className='name'>{displayName}</h2>
-        <img src={photoURL} alt='Profile' className='img' style={{ width: 200, height: 200 }} />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
+            type="url"
+            placeholder="Photo Url"
+            value={photoUrl}
+            onChange={(e) => setPhotoUrl(e.target.value)}
+          />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+      <div>
+        {user && (
+          <>
+            <h2>{user.displayName}</h2>
+            {user.photoURL ? (
+              <img
+                src={user.photoURL}
+                alt="User"
+                style={{ width: 200, height: 200 }}
+              />
+            ) : (
+              <p>No photo available</p>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

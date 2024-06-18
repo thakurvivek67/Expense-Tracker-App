@@ -8,7 +8,9 @@ const HomePage = () => {
       <div className="header">
         <div>welcome to Expense Tracker!!!</div>
         <div className="profile">
-          your profile is incomplete.<NavLink to="/Profile" activeClassName="active" style={{ color: "blue" }}>Complete now</NavLink>
+          <NavLink to="/Profile" activeClassName="active">Profile</NavLink>
+          <NavLink to="/Expense">Expense</NavLink>
+          <NavLink to="/home" exact>Home</NavLink>
         </div>
       </div>
     </div>

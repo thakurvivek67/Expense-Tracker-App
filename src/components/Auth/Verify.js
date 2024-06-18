@@ -18,7 +18,7 @@ const Verify = () => {
                 }
             );
             if (resp.data.emailVerified === true) {
-                navigate("/profile", { replace: true });
+                navigate("/home", { replace: true });
             }
         } catch (error) {
             console.error("Verification error:", error);
