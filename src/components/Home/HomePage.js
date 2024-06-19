@@ -11,6 +11,7 @@ const HomePage = () => {
           <NavLink to="/Profile" activeClassName="active">Profile</NavLink>
           <NavLink to="/Expense">Expense</NavLink>
           <NavLink to="/home" exact>Home</NavLink>
+          <NavLink to="/logout">Logout</NavLink>
         </div>
       </div>
     </div>

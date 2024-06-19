@@ -3,6 +3,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import axios from "axios"; // Import axios for HTTP requests
 import { app } from "./Firebase";
 import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const auth = getAuth(app);
 
@@ -66,6 +67,8 @@ const Login = () => {
             required // Adding required attribute for form validation
           />
           <button type="submit">Submit</button>
+
+          <NavLink to="/Forgot" >ForgotPassword</NavLink>
         </form>
       </div>
     </div>

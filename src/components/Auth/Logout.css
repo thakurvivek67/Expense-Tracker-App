@@ -1,0 +1,53 @@
+/* Logout.css */
+
+.logout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0; /* Light background color */
+}
+
+.text {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.btnContainer {
+    display: flex;
+    justify-content: center; /* Center align buttons */
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #eec2a4; /* Blue button */
+    color: #fff; /* White text */
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px; /* Margin between buttons */
+}
+
+.btn:hover {
+    background-color: #ce7259; /* Darker blue on hover */
+}
+
+.btnCancel {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #adcfeb; /* Red button */
+    color: #fff; /* White text */
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px;
+}
+
+.btnCancel:hover {
+    background-color: #5568c6; /* Darker red on hover */
+}
