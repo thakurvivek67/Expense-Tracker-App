@@ -1,13 +1,9 @@
-// store.js or index.js
-import { configureStore } from '@reduxjs/toolkit';
-import userdetailSlice from './UserdetailSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import  expenseReducer from "./ExpenseSlice";
 
-const Store = configureStore({
-  reducer: {
-    userDetail: userdetailSlice.reducer,
-    // Add other reducers here if needed
-  },
+
+const store = configureStore({
+    reducer: { expense: expenseReducer }
 });
 
-export default Store;
-
+export default store;
