@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getAuth, updateProfile } from "firebase/auth";
 import HomePage from "./HomePage";
+import "./Profile.css"
 
 const Profile = () => {
   const auth = getAuth();
@@ -8,7 +9,9 @@ const Profile = () => {
 
   // Initialize state with localStorage values or empty strings if not found
   const [name, setName] = useState(localStorage.getItem("name") || "");
-  const [photoUrl, setPhotoUrl] = useState(localStorage.getItem("photoUrl") || "");
+  const [photoUrl, setPhotoUrl] = useState(
+    localStorage.getItem("photoUrl") || ""
+  );
 
   // Update localStorage whenever name or photoUrl changes
   useEffect(() => {
@@ -43,37 +46,43 @@ const Profile = () => {
     <div>
       <HomePage></HomePage>
       <div>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            type="url"
-            placeholder="Photo Url"
-            value={photoUrl}
-            onChange={(e) => setPhotoUrl(e.target.value)}
-          />
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-      <div>
-        {user && (
-          <>
-            <h2>{user.displayName}</h2>
-            {user.photoURL ? (
-              <img
-                src={user.photoURL}
-                alt="User"
-                style={{ width: 200, height: 200 }}
-              />
-            ) : (
-              <p>No photo available</p>
-            )}
-          </>
-        )}
+        <div className="profile">
+          <form onSubmit={handleSubmit} className="form">
+            <input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <input
+              type="url"
+              placeholder="Photo Url"
+              value={photoUrl}
+              onChange={(e) => setPhotoUrl(e.target.value)}
+            />
+            <button type="submit" className="btn">
+              Submit
+            </button>
+          </form>
+        </div>
+
+        <div className="profileDisplay">
+          {user && (
+            <>
+              <h2 className="name">{user.displayName}</h2>
+              {user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt="User"
+                  style={{ width: 200, height: 200 }}
+                  className="img"
+                />
+              ) : (
+                <p>No photo available</p>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

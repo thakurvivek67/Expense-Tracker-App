@@ -4,6 +4,7 @@ import axios from "axios"; // Import axios for HTTP requests
 import { app } from "./Firebase";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import "./Login.css";
 
 const auth = getAuth(app);
 
@@ -68,7 +69,7 @@ const Login = () => {
           />
           <button type="submit">Submit</button>
 
-          <NavLink to="/Forgot" >ForgotPassword</NavLink>
+          <NavLink to="/Forgot">ForgotPassword</NavLink>
         </form>
       </div>
     </div>

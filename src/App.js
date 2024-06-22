@@ -6,7 +6,7 @@ import HomePage from "./components/Home/HomePage";
 import Profile from "./components/Home/Profile";
 import Verify from "./components/Auth/Verify";
 import Expense from "./components/Expenses/Expense";
-import Logout from "./components/Auth/Logout"; // Import the Logout component
+import Logout from "./components/Auth/Logout"; 
 import ForgotPassword from "./components/Auth/ForgotPassword";
 
 function App() {
