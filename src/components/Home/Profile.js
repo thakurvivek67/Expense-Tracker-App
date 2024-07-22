@@ -45,7 +45,7 @@ const Profile = () => {
   return (
     <div>
       <HomePage></HomePage>
-      <div>
+      <div className="contanier">
         <div className="profile">
           <form onSubmit={handleSubmit} className="form">
             <input

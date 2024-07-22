@@ -1,17 +1,18 @@
 /* Profile.css */
 
-.profile {
-    margin: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+.contanier{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .profile form {
+    margin: 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+  
+    width: 300px;
 }
 
 .profile form input {
@@ -45,6 +46,8 @@
 .profileDisplay {
     margin-top: 20px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
 .profileDisplay .name {

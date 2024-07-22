@@ -10,14 +10,18 @@ const Verify = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
-            let tmp1 = verificationCode.split("oobCode=")[1];
-            let tmp2 = tmp1.split("&apiKey=")[0];
+             // Extract the oobCode from the verification link
+            let tmp1 = verificationCode.split("oobCode=")[1];// Get the part after 'oobCode='
+            let tmp2 = tmp1.split("&apiKey=")[0];// Get the part before '&apiKey='
+
+             // Send the oobCode to the Firebase API to verify the email
             const resp = await axios.post(
-                `https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDp8idFWhl-LP5BGCa7F_troVRArne3Zls`,
+                `https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAtT2tM0vyvpVl3YO-igDVgDCOb4fdcCGQ`,
                 {
                     oobCode: tmp2,
-                }
+                }   
             );
+            //property firebase api in boolean
             if (resp.data.emailVerified === true) {
                 navigate("/home", { replace: true });
             }
@@ -47,9 +51,9 @@ const Verify = () => {
                     />
                 </div>
 
-                <div className="btn">
+                <div>
                     <button
-                        className="btnT"
+                        className="btn-submit"
                         type="submit"
                     >
                         Submit

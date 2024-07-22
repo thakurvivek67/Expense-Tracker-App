@@ -3,10 +3,12 @@ import "./Signin.css";
 import { NavLink } from "react-router-dom";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { app } from "./Firebase";
+import { useNavigate } from "react-router-dom";
 
 const auth = getAuth(app);
 
 const Signin = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,13 +19,15 @@ const Signin = () => {
         // Clear the input fields after successful creation
         setEmail("");
         setPassword("");
+        navigate("/login");
+
       })
       .catch((error) => alert(error.message));
   };
 
   return (
     <div>
-      <h1>Signup here</h1>
+      <h1 className="heading">SignUp Here</h1>
       <div className="form-container">
       <form>
         <label htmlFor="email">Email</label>
@@ -44,7 +48,7 @@ const Signin = () => {
           Submit
         </button>
         <NavLink to="/login" activeClassName="active" style={{ color: "blue" }}>
-          Already have an account
+          Already have an Account
         </NavLink>
       </form>
     </div>

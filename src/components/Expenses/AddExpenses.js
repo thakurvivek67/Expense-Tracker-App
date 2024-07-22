@@ -21,7 +21,7 @@ const AddExpenses = () => {
     const fetchExpenses = async () => {
         try {
             const res = await axios.get(
-                'https://expense-4ca11-default-rtdb.firebaseio.com/expenses.json'
+                'https://project01-6d2a3-default-rtdb.firebaseio.com/expenses.json'
             );
             if (res.status === 200) {
                 const data = res.data;
@@ -58,12 +58,10 @@ const AddExpenses = () => {
                 if (editingExpenseId) {
                     // Update existing expense
                     await axios.put(
-                        `https://expense-4ca11-default-rtdb.firebaseio.com/expenses/${editingExpenseId}.json`,
+                        `https://project01-6d2a3-default-rtdb.firebaseio.com/expenses/${editingExpenseId}.json`,
                         {
                             body: JSON.stringify(expenses),
-                            headers: {
-                                'content-type': 'application/json',
-                            },
+                            
                         }
                     );
 
@@ -80,12 +78,10 @@ const AddExpenses = () => {
                 } else {
                     // Add new expense
                     const resp = await axios.post(
-                        'https://expense-4ca11-default-rtdb.firebaseio.com/expenses.json',
+                        'https://project01-6d2a3-default-rtdb.firebaseio.com/expenses.json',
                         {
                             body: JSON.stringify(expenses),
-                            headers: {
-                                'content-type': 'application/json',
-                            },
+                           
                         }
                     );
 
@@ -125,7 +121,7 @@ const AddExpenses = () => {
     const handleDeleteClick = async (id) => {
         try {
             await axios.delete(
-                `https://expense-4ca11-default-rtdb.firebaseio.com/expenses/${id}.json`
+                `https://project01-6d2a3-default-rtdb.firebaseio.com/expenses/${id}.json`
             );
             setExpensesList(prevExpenses =>
                 prevExpenses.filter(expense => expense.id !== id)
@@ -137,8 +133,8 @@ const AddExpenses = () => {
 
     return (
         <div>
-            <h2>Add Expense</h2>
-            <div>
+            <h2 className='heading'>Add Expense</h2>
+            <div className='Contanier'>
                 <form onSubmit={handleFormSubmit}>
                     <label htmlFor="amount" className="label">
                         Amount
@@ -204,7 +200,7 @@ const AddExpenses = () => {
                 </form>
             </div>
             <div className="list-container">
-                <h3>Expense List</h3>
+                <h3 className='list-heading'>Expense List</h3>
                 <ul>
                     {expensesList.map((expense) => (
                         <li key={expense.id} className="list">
@@ -215,13 +211,13 @@ const AddExpenses = () => {
                             </div>
                             <div>
                                 <button
-                                    className="edit"
+                                    className="btn-edit"
                                     onClick={() => handleEditClick(expense.id)}
                                 >
                                     Edit
                                 </button>
                                 <button
-                                    className="delete"
+                                    className="btn-delete"
                                     onClick={() => handleDeleteClick(expense.id)}
                                 >
                                     Delete

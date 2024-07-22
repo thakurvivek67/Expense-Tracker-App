@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import axios from "axios"; // Import axios for HTTP requests
+import axios from "axios";
 import { app } from "./Firebase";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
@@ -28,14 +28,17 @@ const Login = () => {
 
       // Send email for verification
       const mailVerify = await axios.post(
-        "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDp8idFWhl-LP5BGCa7F_troVRArne3Zls",
+        "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAtT2tM0vyvpVl3YO-igDVgDCOb4fdcCGQ",
         {
           requestType: "VERIFY_EMAIL",
           idToken: idToken,
         }
       );
+      setEmail("");
+        setPassword("");
 
       navigate("/verify"); // Redirect to verification page on successful login
+
     } catch (error) {
       console.error(error.message);
     }
@@ -48,7 +51,7 @@ const Login = () => {
 
   return (
     <div>
-      <h1>Login here</h1>
+      <h1 className="heading">Login Here</h1>
       <div className="form-container">
         <form onSubmit={handleSubmit}>
           <label htmlFor="email">Email</label>
@@ -70,6 +73,7 @@ const Login = () => {
           <button type="submit">Submit</button>
 
           <NavLink to="/Forgot">ForgotPassword</NavLink>
+          <NavLink to="/">SignUp</NavLink>
         </form>
       </div>
     </div>
